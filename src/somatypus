@@ -403,7 +403,7 @@ merge_filter_all() {
     # Content
     tail -q -n +49 $OUTDIR/8-17_genotyped/GenotypedSNPs_first_allele?.vcf >> $OUTDIR/8-17_genotyped/GenotypedVariants_merged.vcf 2> /dev/null
     tail -q -n +49 $OUTDIR/8-17_genotyped/GenotypedSNPs_second_allele?.vcf >> $OUTDIR/8-17_genotyped/GenotypedVariants_merged.vcf 2> /dev/null
-    tail -n +49 $OUTDIR/8-17_genotyped/GenotypedSNPs_indelExcluded_merged.filtered.VAFfilt.vcf >> $OUTDIR/8-17_genotyped/GenotypedVariants_merged.vcf
+    grep -v '#' $OUTDIR/8-17_genotyped/GenotypedSNPs_indelExcluded_merged.filtered.vcf >> $OUTDIR/8-17_genotyped/GenotypedVariants_merged.vcf
 
     # Filter calls with flags badReads, MQ, strandBias, SC or QD
     awk '!(($7 ~ /badReads/) || ($7 ~ /MQ/) || ($7 ~ /strandBias/) || ($7 ~ /SC/) || ($7 ~ /QD/))' $OUTDIR/8-17_genotyped/GenotypedVariants_merged.vcf > $OUTDIR/8-17_genotyped/GenotypedVariants_merged.filtered.vcf
@@ -411,12 +411,9 @@ merge_filter_all() {
     # Some 2-bp MNPs (containing just 1 SNP) can be caused by indels and SNPs sharing position; they can be split without problems
     Somatypus_SplitMA-MNPs.py $OUTDIR/8-17_genotyped/GenotypedVariants_merged.filtered.vcf > $OUTDIR/logs/17.1_final_split.log
 
-    # Filter variants with a VAF >0.9 in all samples
-    Somatypus_VafFilter.py $OUTDIR/8-17_genotyped/GenotypedVariants_merged.filtered.split.vcf > $OUTDIR/logs/17.2_VAF_filter.log
-
     # Sort VCFs
-    vcf-sort $OUTDIR/8-17_genotyped/GenotypedVariants_merged.filtered.split.VAFfilt_SNPs.vcf > $OUTDIR/Somatypus_SNPs_final.vcf 2> /dev/null
-    vcf-sort $OUTDIR/8-17_genotyped/GenotypedVariants_merged.filtered.split.VAFfilt_Indels.vcf > $OUTDIR/Somatypus_Indels_final.vcf 2> /dev/null
+    vcf-sort $OUTDIR/8-17_genotyped/GenotypedVariants_merged.filtered.split.SNPs.vcf > $OUTDIR/Somatypus_SNPs_final.vcf 2> /dev/null
+    vcf-sort $OUTDIR/8-17_genotyped/GenotypedVariants_merged.filtered.split.Indels.vcf > $OUTDIR/Somatypus_Indels_final.vcf 2> /dev/null
         
 }
 
@@ -798,7 +795,7 @@ if [ "$STEP" -lt 16 ]; then
     merge_filter_indelflagged
     
     # Check successful execution
-    check_file $OUTDIR/8-17_genotyped/GenotypedSNPs_indelExcluded_merged.filtered.VAFfilt.vcf
+    check_file $OUTDIR/8-17_genotyped/GenotypedSNPs_indelExcluded_merged.filtered.vcf
     
     # Update checkpoint file
     echo -e "\nSuccess"
