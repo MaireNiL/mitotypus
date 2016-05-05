@@ -48,7 +48,7 @@ print_help() {
     echo "|    -v  Print version and exit."
     echo "|"
     echo "| Usage:"
-    echo "|    somatypus -i /path/to/bams_dir -o /path/to/out_dir -g /path/to/genome.fna -r /path/to/regions.txt -c <1-8> -p \"--option=VAL --option=VAL\""
+    echo "|    mitotypus -i /path/to/bams_dir -o /path/to/out_dir -g /path/to/genome.fna -r /path/to/regions.txt -c <1-8> -p \"--option=VAL --option=VAL\""
     echo
     echo
 }
