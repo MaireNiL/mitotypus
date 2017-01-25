@@ -2,7 +2,8 @@
 
 # SOMATYPUS: A PLATYPUS-BASED VARIANT CALLING PIPELINE FOR CANCER DATA
 # Adrian Baez-Ortega, Transmissible Cancer Group, University of Cambridge
-# 09/02/2016
+# Last updated by ml677
+# 25 January 2017
 
 # ExtractVcfData.py
 # Identifies SNPs close to indels in multiple Platypus output VCF files
@@ -48,18 +49,16 @@ print 'Output metadata file: ', outFileMD
 
 
 with open(vcfFile, 'r') as vcf, open(outFileNR, 'w') as outNR, open(outFileNV, 'w') as outNV, open(outFileMD, 'w') as outMD:
-    i = 0
     for line in vcf:
-        i = i + 1
-        # Skip first 47 header lines, and write column headers
-        if i == 48:
+        li=line.strip()
+        if li.startswith("#"):
             MDhead = line[1:].strip().split('\t')[:8]
             NRhead = line.strip().split('\t')[9:]
             outMD.write('\t'.join(MDhead) + '\n')
             outNR.write('\t'.join(NRhead) + '\n')
             outNV.write('\t'.join(NRhead) + '\n')
             
-        elif i > 48:
+        elif not li.startswith("#"):
             # Extract metadata
             metadata = line.strip().split('\t')[:8]
             outMD.write('\t'.join(metadata) + '\n')
