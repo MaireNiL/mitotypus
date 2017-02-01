@@ -70,7 +70,7 @@ check_file() {
 # Merges filtered Platypus SNV calls obtained from individual calling
 merge_calls() {
     mkdir -p $OUTDIR/5-7_merged
-    mkdir -p $OUTDIR/6_SNV_merge
+    mkdir -p $OUTDIR/logs/6_SNV_merge
     # Create a list of filtered individual VCFs
     ls -1 $OUTDIR/4_individual_filtered/*.filtered.vcf > $OUTDIR/4_individual_filtered/list.txt
 
