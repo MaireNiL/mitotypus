@@ -70,16 +70,34 @@ check_file() {
 # Merges filtered Platypus SNV calls obtained from individual calling
 merge_calls() {
     mkdir -p $OUTDIR/5-7_merged
+    mkdir -p $OUTDIR/6_SNV_merge
     # Create a list of filtered individual VCFs
     ls -1 $OUTDIR/4_individual_filtered/*.filtered.vcf > $OUTDIR/4_individual_filtered/list.txt
 
     # Merge SNVs from all filtered VCFs
-    bsub -o $OUTDIR/logs/1_individual_default/log.%J \
-              -e $OUTDIR/logs/1_individual_default/err.%J \
+    bsub -o $OUTDIR/logs/6_SNV_merge/log.%J \
+              -e $OUTDIR/logs/6_SNV_merge/err.%J \
               -q normal \
               -n $CPUS \
               -R 'span[hosts=1] select[mem>=10000] rusage[mem=10000]' -M10000 \
     "Somatypus_SNVmerge.py $OUTDIR/4_individual_filtered/list.txt $OUTDIR/5-7_merged > $OUTDIR/logs/6_SNV_merge.log"
+}
+
+# 7) extract_indels()
+# Extracts indels from Platypus VCF files obtained from individual calling
+extract_indels() {
+
+    # Create list of original individual VCFs
+    # (Indel merging uses unfiltered, unsplit calls)
+    mkdir -p $OUTDIR/logs/7_indel_merge
+    ls -1 $OUTDIR/1-2_individual_calls/*.vcf > $OUTDIR/1-2_individual_calls/list.txt
+
+    bsub -o $OUTDIR/logs/7_indel_merge/log.%J \
+              -e $OUTDIR/logs/7_indel_merge/err.%J \
+              -q normal \
+              -n $CPUS \
+              -R 'span[hosts=1] select[mem>=10000] rusage[mem=10000]' -M10000 \
+    "./Somatypus_IndelMerge.py $OUTDIR/1-2_individual_calls/list.txt $OUTDIR/5-7_merged > $OUTDIR/logs/7_indel_merge.log"
 }
 
 ################################### END OF FUNCTIONS ####################################
@@ -253,7 +271,11 @@ echo -e "\nExecution started on `date`"
 # 6. MERGE THE VCFS ACCORDING TO CHR,POS,REF,ALT VALUES
 echo -e "\n(6) MERGING FILTERED SNVS"
 merge_calls
-    
 echo "6 merge calls" >> $OUTDIR/logs/CHECKPOINT
 
-echo -e "\nsomatypus-farm-6 finished on `date`\n\n** Platypus jobs may still be running **\n"
+# 7. EXTRACT AND FILTER INDELS
+echo -e "\n(7) EXTRACTING, FILTERING AND MERGING INDELS"
+extract_indels
+echo "7 extract_indels" >> $OUTDIR/logs/CHECKPOINT
+
+echo -e "\nsomatypus-farm-6-7 finished on `date`\n\n** Platypus jobs may still be running **\n"
