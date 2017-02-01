@@ -270,5 +270,5 @@ echo -e "\nExecution started on `date`"
 
 echo -e "\n(4) FILTERING INDIVIDUAL CALLS"
 filter_calls
-    
+echo "4 filter_calls" >> $OUTDIR/logs/CHECKPOINT    
 echo -e "\nsomatypus-farm-4 finished on `date`\n\n** Platypus jobs may still be running **\n"
