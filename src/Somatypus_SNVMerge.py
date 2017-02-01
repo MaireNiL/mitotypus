@@ -4,7 +4,7 @@
 # Adrian Baez-Ortega, Transmissible Cancer Group, University of Cambridge
 # 22/01/2016
 
-# Somatypus_SnpMerge.py
+# Somatypus_SNVMerge.py
 # Merges SNPs from multiple Platypus output VCF files
 # Called by merge_calls()
 
@@ -29,17 +29,14 @@ from sets import Set
 
 # If not 3 arguments: print help
 if len(sys.argv) != 4:
-    print '\nSomatypus_SnpMerge.py: Merges SNPs from multiple Platypus output VCF files.'
-    print '                       *The VCFs need to be split first using the Somatypus_SplitMAandMNPs.py script.*'
-    print '                       *The exclusion list has to be created using the Somatypus_IndelFlag.py script.*'
-    print '                       For each VCF, it selects only SNPs that are not included in the list of SNPs'
-    print '                       to exclude (SNPs located at <5 bp from an indel, in principle).'
-    print '                       For multiallelic SNPs, it outputs extra alleles to different files for'
+    print '\nSomatypus_SNVMerge.py: Merges SNVs from multiple Platypus output VCF files.'
+    print '                       *The VCFs need to be split first using the Somatypus_SplitMAandMNVs.py script.*'
+    print '                       For multiallelic SNVs, it outputs extra alleles to different files for'
     print '                       independent genotyping.\n'
     print '                Input: A text file with paths to VCF files, one per line.'
     print '                       A text file with a list of SNPs to exclude, in CHROM:POS,REF>ALT format.'
     print '                       Path to (existing) output folder.'
-    print '                Usage: Somatypus_SnpMerge.py /path/to/fileList.txt /path/to/excludeList.txt /path/to/outDir\n'
+    print '                Usage: Somatypus_SNVMerge.py /path/to/fileList.txt /path/to/excludeList.txt /path/to/outDir\n'
     sys.exit(0)
 
 
